@@ -1,0 +1,31 @@
+[project]
+name = "simple-semantic-search"
+authors = [
+    { name = "Will Parr" },
+]
+description = ""
+version = "0.0.1"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = ["Programming Language :: Python :: 3"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[tool.black]
+line-length = 120
+
+[tool.flake8]
+max-line-length = 120
+ignore = ["E266", "W503", "E203", "E402"]
+exclude = [".git", "__pycache__", "build", "dist", ".venv"]
+
+[tool.isort]
+profile = "black"
+skip = [".yml"]
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+]
+pythonpath = "."
