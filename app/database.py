@@ -44,7 +44,7 @@ class VectorDatabase:
 
     def connect(self):
         """Connect to the SQLite database."""
-        self.conn = sqlite3.connect(self.db_path)
+        self.conn = sqlite3.connect(self.db_path, check_same_thread=False)
 
         # Load sqlite-vec extension
         self.conn.enable_load_extension(True)
@@ -75,7 +75,7 @@ class VectorDatabase:
             self.conn.close()
 
     @ensure_connection
-    def insert_vector(self, embedding: Embedding) -> None:
+    def insert_embedding(self, embedding: Embedding) -> None:
         """Insert a new vector into the database."""
         # To keep mypy happy.
         if self.conn is None:
@@ -96,7 +96,7 @@ class VectorDatabase:
 
             self.conn.execute(
                 f"INSERT INTO {self.embedding_table_name} (id, embedding) VALUES(?, ?)",
-                [embedding.id, self.vector_serializer.serialize(embedding.vector)],
+                (embedding.id, self.vector_serializer.serialize(embedding.vector)),
             )
 
     @ensure_connection
@@ -173,7 +173,7 @@ class VectorDatabase:
                     AND k = {top_k}
                 ORDER BY distance
                 """,
-                [self.vector_serializer.serialize(search_embedding)],
+                (self.vector_serializer.serialize(search_embedding),),
             ).fetchall()
 
         vectors = [
@@ -193,7 +193,7 @@ class VectorDatabase:
         return vectors
 
     @ensure_connection
-    def get_all_vectors(self) -> list[Embedding]:
+    def get_all_embeddings(self, limit: int = 100) -> list[Embedding]:
         """Retrieve all vectors from the database."""
         # To keep mypy happy.
         if self.conn is None:
@@ -210,7 +210,9 @@ class VectorDatabase:
                     timestamp
                 FROM {self.embedding_table_name}
                 LEFT JOIN {self.sentence_table_name} ON {self.sentence_table_name}.id = {self.embedding_table_name}.id
-                """
+                LIMIT ?
+                """,
+                (limit,),
             ).fetchall()
 
             embeddings_vectors = [

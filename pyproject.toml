@@ -1,16 +1,23 @@
-[project]
+[tool.poetry]
 name = "simple-semantic-search"
-authors = [
-    { name = "Will Parr" },
-]
+version = "0.1.0"
 description = ""
-version = "0.0.1"
+authors = ["Will Parr"]
 readme = "README.md"
-requires-python = ">=3.10"
-classifiers = ["Programming Language :: Python :: 3"]
+package-mode = false
 
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
+[tool.poetry.dependencies]
+python = "^3.10"
+pydantic = "^2.8.2"
+shortuuid = "^1.0.13"
+numpy = "^2.0.1"
+sqlite-vec = "^0.1.2a7"
+sentence-transformers = "^3.0.1"
+fastapi = { version = "^0.112.1", extras = ["standard"] }
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.26.0"
+pytest = "^8.3.2"
 
 [tool.black]
 line-length = 120
