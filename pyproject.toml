@@ -18,6 +18,7 @@ fastapi = { version = "^0.112.1", extras = ["standard"] }
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.26.0"
 pytest = "^8.3.2"
+pre-commit = "^3.8.0"
 
 [tool.black]
 line-length = 120
